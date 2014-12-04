@@ -1,0 +1,59 @@
+.intro-page{
+
+  .intro-slide{
+    position: relative;
+
+    /* Place the header at the top and paragraph at the bottom */
+    h3, p{
+      position: absolute;
+      text-align: center;
+      background-color: rgba(255, 255, 255, .8);
+      padding: 10px;
+      width: 100%;
+    }
+
+    h3{
+      top: 20px;
+    }
+
+    p{
+      bottom: 40px;
+    }
+  }
+
+  .intro-1{
+    background: url('../img/intro-1.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  .intro-2{
+    background: url('../img/intro-2.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  .intro-3{
+    background: url('../img/intro-3.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  .intro-4{
+    background: url('../img/intro-4.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+  .intro-5{
+    background: url('../img/intro-5.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  /* For Intro Slider */
+  .slider {
+    height: 100%;
+  }
+  .slider-slide {
+    height: 100%;
+    padding-top: 80px;
+    color: #000;
+    background-color: #fff;
+    text-align: center;
+
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+  }
+}
