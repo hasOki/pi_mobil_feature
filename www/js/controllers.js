@@ -1,6 +1,7 @@
 angular.module('starter.controllers', [])
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, QRScanService) {
+  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, QRScanService, $cordovaToast, $ionicPopup) {
+    console.log('App CTRL');
     // Form data for the login modal
     $scope.loginData = {};
 
@@ -31,8 +32,26 @@ angular.module('starter.controllers', [])
         $scope.closeLogin();
       }, 1000);
     };
+
+    $scope.$on('pushNotificationReceived', function (event, notification) {
+
+      // process notification
+      $cordovaToast.showShortCenter('You Got New Notification').then(function (result) {
+        // Success!
+        console.log('Success showing Toast');
+      }, function (err) {
+        // An error occurred. Show a message to the user
+        $ionicPopup.alert({
+          title    : 'ERROR',
+          template : err
+        });
+      });
+    });
   })
 
+/**
+ * QRScan Service
+ */
   .factory('QRScanService', function () {
     return {
       scan : function (success, fail) {
@@ -51,31 +70,42 @@ angular.module('starter.controllers', [])
     }
   })
 
-  .controller('QRScanCtrl', function ($scope, QRScanService, $ionicPopup) {
+/**
+ * QR Scanner Controller to get the login credential
+ */
+  .controller('QRScanCtrl', function ($scope, $cordovaBarcodeScanner, $ionicPopup) {
     /**
      * QRReader code
      */
     console.log('QRScan CTRL');
 
-      // Trigger the scan action
-    $scope.scanQR = function(){
+    // Trigger the scan action
+    $scope.scanQR = function () {
       console.log('Start Scan QR');
-      QRScanService.scan(function(result){
-        console.log('Success');
-        $ionicPopup.alert({
-          title: 'YOU GOT QR',
-          template: 'Data: ' + result.text
+      $cordovaBarcodeScanner.scan()
+        .then(function (result) {
+          console.log('Success');
+          if (result.cancelled) {
+            $ionicPopup.alert({
+              title    : 'NO QR FOR YOU',
+              template : 'You canceled the Scan Process'
+            });
+          } else {
+            $ionicPopup.alert({
+              title    : 'YOU GOT QR',
+              template : 'Data: ' + result.text
+            });
+          }
+        }, function (error) {
+          $ionicPopup.alert({
+            title    : 'Unable to scan the QR code',
+            template : 'Too bad, something went wrong.'
+          });
         });
-      }, function(error){
-        $ionicPopup.alert({
-          title: 'Unable to scan the QR code',
-          template: 'Too bad, something went wrong.'
-        });
-      });
     };
 
     // accept the QR Code result
-    $scope.saveQR = function(){
+    $scope.saveQR = function () {
 
     };
   })
@@ -84,21 +114,25 @@ angular.module('starter.controllers', [])
  *  Card Controller for Tinder-like Offer approval
  */
   .controller('CardsCtrl', function ($scope, TDCardDelegate) {
-    console.log('CARDS CTRL');
+    console.log('Cards CTRL');
     var offers = [
-      {name         : '1989',
+      {
+        name        : '1989',
         icon        : 'img/offer-icon-1.jpg',
         description : 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
       },
-      {name         : 'Red',
+      {
+        name        : 'Red',
         icon        : 'img/offer-icon-2.jpg',
         description : 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
       },
-      {name         : 'Speak Now',
+      {
+        name        : 'Speak Now',
         icon        : 'img/offer-icon-3.jpg',
         description : 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
       },
-      {name         : 'Fearless',
+      {
+        name        : 'Fearless',
         icon        : 'img/offer-icon-4.jpg',
         description : 'Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
       }
@@ -106,11 +140,11 @@ angular.module('starter.controllers', [])
 
     $scope.cards = Array.prototype.slice.call(offers, 0);
 
-    $scope.cardDestroyed = function(index) {
+    $scope.cardDestroyed = function (index) {
       $scope.cards.splice(index, 1);
     };
 
-    $scope.addCard = function() {
+    $scope.addCard = function () {
       var newCard = offers[Math.floor(Math.random() * offers.length)];
       newCard.id = Math.random();
       $scope.cards.push(angular.extend({}, newCard));
@@ -127,11 +161,134 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('OffersApprovalCtrl', function ($scope) {
+/**
+ * Push Notification Controller for Device Level Push Notification
+ */
+  .controller('PushNotificationCtrl', function ($scope, $cordovaPush, $ionicPopup, $cordovaDevice) {
+    console.log('PushNotification CTRL');
+    var pushNotificationCtrl = this;
+
+    var androidConfig = {
+      "senderID" : "replace_with_sender_id"
+    };
+
+    var iosConfig = {
+      "badge" : "true",
+      "sound" : "true",
+      "alert" : "true"
+    };
+
+    // (optional) custom notification handler
+    // If you set "ecb" in the config object, the 'pushNotificationReceived' angular
+    // event will not be broadcast.
+    // You will be responsible for handling the notification and passing it to your
+    // contollers/services
+    // androidConfig.ecb = "myCustomOnNotificationHandler";
+    // iosConfig.ecb = "myCustomOnNotificationAPNHandler";
+
+    // assign the config based on the device platform
+    var config;
+    var devicePlatform = $cordovaDevice.getPlatform();
+    switch (devicePlatform) {
+      case 'Android':
+        config = androidConfig;
+        break;
+
+      case 'iOS':
+        config = iosConfig;
+        break;
+    }
+
+    $scope.registerToNotification = function () {
+      console.log('Register Notification');
+      $cordovaPush.register(config).then(function (result) {
+        // Success!
+        $ionicPopup.alert({
+          title    : 'SUCCESS',
+          template : 'Register to Push Notification'
+        });
+      }, function (err) {
+        // An error occurred. Show a message to the user
+        $ionicPopup.alert({
+          title    : 'ERROR',
+          template : err
+        });
+      });
+    };
+
+    var options = {};
+    $scope.unregisterToNotification = function () {
+      console.log('Unregister Notification');
+      $cordovaPush.unregister(options).then(function (result) {
+        // Success!
+        $ionicPopup.alert({
+          title    : 'SUCCESS',
+          template : 'Unregister to Push Notification'
+        });
+      }, function (err) {
+        // An error occurred. Show a message to the user
+        $ionicPopup.alert({
+          title    : 'ERROR',
+          template : 'Error Unergistering Push Notification'
+        });
+      });
+    };
+
+    $scope.setBadgeCount = function (newCount) {
+      if (devicePlatform === 'iOS') {
+        console.log('Set Badge Count - iOS Only');
+        // iOS only
+        $cordovaPush.setBadgeNumber($scope.badgeCounter).then(function (result) {
+          // Success!
+          $ionicPopup.alert({
+            title    : 'BADGE Number Update',
+            template : 'Set Badge Number to ' + $scope.badgeCounter
+          });
+        }, function (err) {
+          // An error occurred. Show a message to the user
+          $ionicPopup.alert({
+            title    : 'ERROR',
+            template : 'Error Setting Up Badge Number'
+          });
+        });
+      }
+    };
+
   })
 
-  .controller('PushNotificationCtrl', function ($scope, $cordovaPush) {
-  })
+/**
+ * Social Sharing Controller to use Native Share in the device
+ */
+  .controller('SocialSharingCtrl', function ($scope, $cordovaSocialSharing, $cordovaToast, $ionicPopup) {
+    console.log('Social Sharing CTRL');
 
-  .controller('SocialSharingCtrl', function ($scope, $cordovaSocialSharing) {
+    var socialSharingCtrl = this;
+
+    $scope.shareWithTwitter = function () {
+      console.log('Share with Twitter');
+
+      $cordovaSocialSharing.shareViaTwitter($scope.message, '', 'http://www.tune.com')
+        .then(function (result) {
+          $cordovaToast.showShortCenter('Twitter Sent');
+        }, function (err) {
+          $ionicPopup.alert({
+            title    : 'ERROR',
+            template : 'Error sending to Twitter'
+          });
+        });
+    };
+
+    $scope.shareWithEmail = function () {
+      console.log('Share with Email');
+
+      $cordovaSocialSharing.shareViaEmail($scope.message, 'A Message from your Mobile App')
+        .then(function (result) {
+          $cordovaToast.showShortCenter('Email Sent');
+        }, function (err) {
+          $ionicPopup.alert({
+            title    : 'ERROR',
+            template : 'Error sending to Twitter'
+          });
+        });
+    };
   });

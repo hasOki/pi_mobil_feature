@@ -9,12 +9,10 @@
         <div ng-controller="QRScanCtrl">
             <form ng-submit="saveQR()">
                 <div class="list" padding="20">
-                    <div class="item">
-                        <p>Scan the QR Code in your Desktop Publisher Interface Page <br/>
-                            To Login into Mo-HO App</p>
-                    </div>
                     <!--Add QR Reader here-->
                     <label class="item">
+                        <p class="input-label">Scan the QR Code in your Desktop Publisher Interface Page <br/>
+                            To Login into Mo-HO App</p>
                         <button class="button button-block button-positive" ng-click="scanQR()" >Scan QR</button>
                     </label>
                 </div>

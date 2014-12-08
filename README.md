@@ -10,6 +10,8 @@ Module that we test here:
 
 - Intro Pages using swipe gesture:
 
+- Toast:
+https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
 
 - QR Code Reader:
 http://ngcordova.com/docs/#BarcodeScanner
@@ -18,4 +20,8 @@ http://ngcordova.com/docs/#BarcodeScanner
 http://ionicframework.com/blog/tinder-for-x/
 
 - Push Notification:
+http://ngcordova.com/docs/#Push
+
+- Social Sharing:
+http://ngcordova.com/docs/#SocialSharing
 
