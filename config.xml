@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.pimobilfeature831531" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.hasoffers.publisher-application" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>pi_mobil_feature</name>
   <description>
-        An Ionic Framework and Cordova project.
-    </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+    Publisher Interface Application for TUNE HasOffers Affiliate Customer
+  </description>
+  <author email="hofn@tune.com" href="http://tune.com/">
+    TUNE HasOffers Front End Team
     </author>
   <content src="index.html"/>
   <access origin="*"/>

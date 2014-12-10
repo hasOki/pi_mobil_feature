@@ -36,7 +36,7 @@ angular.module('starter.controllers', [])
     $scope.$on('pushNotificationReceived', function (event, notification) {
 
       // process notification
-      $cordovaToast.showShortCenter('You Got New Notification').then(function (result) {
+      $cordovaToast.showShortCenter('You Got New Notification : ' + notification).then(function (result) {
         // Success!
         console.log('Success showing Toast');
       }, function (err) {
@@ -169,7 +169,7 @@ angular.module('starter.controllers', [])
     var pushNotificationCtrl = this;
 
     var androidConfig = {
-      "senderID" : "replace_with_sender_id"
+      "senderID" : "289735507660" // Sender ID from Google Play Dev Console
     };
 
     var iosConfig = {
@@ -201,8 +201,17 @@ angular.module('starter.controllers', [])
 
     $scope.registerToNotification = function () {
       console.log('Register Notification');
-      $cordovaPush.register(config).then(function (result) {
+      $cordovaPush.register(config).then(function (deviceID) {
         // Success!
+        console.log(deviceID);
+
+        /**
+         * IOS Notes :
+         * ===========
+         * DeviceID will be need to be registered to the API and send to the SNS server
+         * to allow the device to receive Push Notification.
+         */
+
         $ionicPopup.alert({
           title    : 'SUCCESS',
           template : 'Register to Push Notification'
