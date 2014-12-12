@@ -2,13 +2,19 @@
 ## Mock Apps to test features for Mo-Ho
 
 The purpose of this apps is to test the features before we add it to the real apps.
-All of the data is using mock data and soelely for testing pruposes.
+All of the data is using mock data and solely for testing purpose
 
 _Created using ionic framework._
+
+
+
+
+### Installing Cordova Plugins
 
 Module that we test here:
 
 - Intro Pages using swipe gesture:
+http://ionicframework.com/docs/api/directive/ionSlideBox/
 
 - Toast:
 https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
